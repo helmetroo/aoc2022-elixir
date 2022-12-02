@@ -6,11 +6,11 @@ defmodule AOC2022.Runner do
     solution = Puzzle.solve(P1.get_puzzle_info(), P1)
 
     unless solution[:part_one] == nil do
-      IO.puts "Part one answer: #{solution[:part_one]}"
+      IO.puts("Part one answer: #{solution[:part_one]}")
     end
 
     unless solution[:part_two] == nil do
-      IO.puts "Part two answer: #{solution[:part_two]}"
+      IO.puts("Part two answer: #{solution[:part_two]}")
     end
   end
 
