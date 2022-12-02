@@ -1,9 +1,9 @@
 defmodule AOC2022.Runner do
   alias AOC2022.Puzzle, as: Puzzle
-  alias AOC2022.P1, as: P1
+  alias AOC2022.P2, as: P2
 
   defp print_latest_solution do
-    solution = Puzzle.solve(P1.get_puzzle_info(), P1)
+    solution = Puzzle.solve(P2.get_puzzle_info(), P2)
 
     unless solution[:part_one] == nil do
       IO.puts("Part one answer: #{solution[:part_one]}")
