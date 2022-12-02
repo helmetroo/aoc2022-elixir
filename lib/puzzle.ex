@@ -4,7 +4,7 @@ defmodule AOC2022.Puzzle do
             part_one_mode: :skip,
             part_two_mode: :skip
 
-  defp load_input_file!(number, mode \\ :full) do
+  def load_input_file!(number, mode \\ :full) do
     input_file_name = "#{number}-#{mode}.txt"
 
     input_file_path =
