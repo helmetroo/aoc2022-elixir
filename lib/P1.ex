@@ -4,7 +4,8 @@ defmodule AOC2022.P1 do
   def get_puzzle_info do
     %Puzzle{
       number: 1,
-      part_one_mode: :full
+      part_one_mode: :full,
+      part_two_mode: :full
     }
   end
 
@@ -16,15 +17,19 @@ defmodule AOC2022.P1 do
     |> Enum.map(fn elf -> Enum.map(elf, &String.to_integer/1) end)
   end
 
-  def solve_part_one(calories) do
-    [most | _] =
-      Enum.map(calories, &Enum.sum/1)
-      |> Enum.sort(:desc)
-
-    most
+  defp sort_by_total_calories(calories) do
+    Enum.map(calories, &Enum.sum/1)
+    |> Enum.sort(:desc)
   end
 
-  def solve_part_two(input) do
-    2
+  def solve_part_one(calories) do
+    sort_by_total_calories(calories)
+    |> hd
+  end
+
+  def solve_part_two(calories) do
+    sort_by_total_calories(calories)
+    |> Enum.take(3)
+    |> Enum.sum()
   end
 end
