@@ -4,7 +4,8 @@ defmodule AOC2022.P3 do
   def get_puzzle_info do
     %Puzzle{
       number: 3,
-      part_one_mode: :full
+      part_one_mode: :full,
+      part_two_mode: :full
     }
   end
 
@@ -20,6 +21,22 @@ defmodule AOC2022.P3 do
     end)
   end
 
+  def solve_part_two(backpacks) do
+    backpacks
+    |> Enum.chunk_every(3)
+    |> Enum.reduce(0, fn group, acc ->
+      group_priority =
+        group
+        |> Enum.map(&MapSet.new/1)
+        |> intersect_all()
+        |> MapSet.to_list()
+        |> hd
+        |> get_priority()
+
+      acc + group_priority
+    end)
+  end
+
   def get_common_char(backpack) do
     midpoint = round(length(backpack) / 2)
     {first_compart, second_compart} = Enum.split(backpack, midpoint)
@@ -31,6 +48,11 @@ defmodule AOC2022.P3 do
     MapSet.intersection(first_compart_uniques, second_compart_uniques)
     |> MapSet.to_list()
     |> hd
+  end
+
+  def intersect_all(sets) do
+    [first | rest] = sets
+    Enum.reduce(rest, first, fn set, acc -> MapSet.intersection(set, acc) end)
   end
 
   def get_priority(chr) do
