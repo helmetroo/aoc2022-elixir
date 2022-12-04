@@ -4,7 +4,8 @@ defmodule AOC2022.P4 do
   def get_puzzle_info do
     %Puzzle{
       number: 4,
-      part_one_mode: :full
+      part_one_mode: :full,
+      part_two_mode: :full
     }
   end
 
@@ -12,19 +13,26 @@ defmodule AOC2022.P4 do
     @enforce_keys [:first, :second]
     defstruct first: 0..0, second: 0..0
 
-    def contains_other(%RangePair{first: first, second: second}) do
+    def get_larger_and_smaller(%RangePair{first: first, second: second}) do
       first_size = Range.size(first)
       second_size = Range.size(second)
 
-      {larger, smaller} =
-        if first_size >= second_size do
-          {first, second}
-        else
-          {second, first}
-        end
+      if first_size >= second_size do
+        {first, second}
+      else
+        {second, first}
+      end
+    end
+
+    def contains_other?(%RangePair{} = pair) do
+      {larger, smaller} = get_larger_and_smaller(pair)
 
       smaller.first >= larger.first &&
         smaller.last <= larger.last
+    end
+
+    def overlaps_other?(%RangePair{first: first, second: second}) do
+      !Range.disjoint?(first, second)
     end
   end
 
@@ -51,10 +59,13 @@ defmodule AOC2022.P4 do
 
   def solve_part_one(range_pairs) do
     Enum.reduce(range_pairs, 0, fn pair, acc ->
-      if RangePair.contains_other(pair), do: acc + 1, else: acc
+      if RangePair.contains_other?(pair), do: acc + 1, else: acc
     end)
   end
 
-  def solve_part_two(_range_pairs) do
+  def solve_part_two(range_pairs) do
+    Enum.reduce(range_pairs, 0, fn pair, acc ->
+      if RangePair.overlaps_other?(pair), do: acc + 1, else: acc
+    end)
   end
 end
