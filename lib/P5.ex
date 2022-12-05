@@ -4,7 +4,8 @@ defmodule AOC2022.P5 do
   def get_puzzle_info do
     %Puzzle{
       number: 5,
-      part_one_mode: :full
+      part_one_mode: :full,
+      part_two_mode: :full
     }
   end
 
@@ -55,14 +56,16 @@ defmodule AOC2022.P5 do
       add_level_from(rest, index + 1, new_map)
     end
 
-    def execute(stack_state, instructions) do
+    def execute(stack_state, instructions, mode \\ :at_a_time) do
       Enum.reduce(instructions, stack_state, fn inst, state ->
         {taken_boxes, boxes_left} = Enum.split(state[inst.from], inst.count)
 
         # Reversing the boxes we took is analogous to taking them one at a time
+        boxes_to_place = if mode == :at_a_time, do: Enum.reverse(taken_boxes), else: taken_boxes
+
         state
         |> Map.replace(inst.from, boxes_left)
-        |> Map.replace(inst.to, Enum.reverse(taken_boxes) ++ state[inst.to])
+        |> Map.replace(inst.to, boxes_to_place ++ state[inst.to])
       end)
     end
 
@@ -104,10 +107,12 @@ defmodule AOC2022.P5 do
   end
 
   def solve_part_one({stack_state, instructions}) do
-    StackState.execute(stack_state, instructions)
+    StackState.execute(stack_state, instructions, :at_a_time)
     |> StackState.get_message()
   end
 
   def solve_part_two({stack_state, instructions}) do
+    StackState.execute(stack_state, instructions, :all_at_once)
+    |> StackState.get_message()
   end
 end
