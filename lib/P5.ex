@@ -11,11 +11,12 @@ defmodule AOC2022.P5 do
 
   defmodule StackState do
     def new(str) do
-      str
-      |> String.split("\n")
-      |> :lists.droplast()
-      |> Enum.reduce(%{}, &add_boxes/2)
-      |> flip_boxes()
+      [_ | stacks] =
+        str
+        |> String.split("\n")
+        |> Enum.reverse()
+
+      Enum.reduce(stacks, %{}, &add_boxes/2)
     end
 
     def add_boxes(line, state) do
@@ -26,10 +27,6 @@ defmodule AOC2022.P5 do
           [next_box | cur_boxes]
         end
       )
-    end
-
-    def flip_boxes(map) do
-      for {col, boxes} <- map, into: %{}, do: {col, Enum.reverse(boxes)}
     end
 
     def add_level(line) do
