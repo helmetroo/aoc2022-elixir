@@ -17,7 +17,9 @@ defmodule AOC2022.Puzzle do
     end
   end
 
-  def solve(metadata, puzzle) do
+  def solve(puzzle) do
+    metadata = puzzle.get_puzzle_info()
+
     solution_one =
       unless metadata.part_one_mode == :skip do
         load_input_file!(metadata.number, metadata.part_one_mode)
