@@ -4,42 +4,53 @@ defmodule AOC2022.P6 do
   def get_puzzle_info do
     %Puzzle{
       number: 6,
-      part_one_mode: :full
+      part_one_mode: :full,
+      part_two_mode: :full
     }
   end
 
+  @sizes %{
+    :packet_start => 4,
+    :message => 14
+  }
+
   def parse_input_file(buffer), do: String.trim(buffer)
 
-  # "Differings" = "differing characters". This method name is already too long.
-  def first_marker_of_four_differings(buffer) do
+  def first_marker_position(buffer, size_type) do
+    required_size = @sizes[size_type]
     buffer_chrs = String.graphemes(buffer)
-    initial_state = {0, MapSet.new()}
+    first_marker_position_from(buffer_chrs, 0, required_size)
+  end
 
-    {marker, _} =
-      Enum.reduce_while(buffer_chrs, initial_state, fn chr, {marker, set} ->
-        updated_set =
-          if MapSet.member?(set, chr) do
-            new_set = MapSet.new()
-            MapSet.put(new_set, chr)
-          else
-            MapSet.put(set, chr)
-          end
+  def first_marker_position_from(buffer_chrs, index, required_size) do
+    differing_char_set =
+      Enum.reduce_while(buffer_chrs, MapSet.new(), fn chr, set ->
+        done =
+          MapSet.member?(set, chr) or
+            MapSet.size(set) == required_size
 
-        if MapSet.size(set) == 4 do
-          {:halt, {marker, set}}
+        if done do
+          {:halt, set}
         else
-          next_state = {marker + 1, updated_set}
-          {:cont, next_state}
+          {:cont, MapSet.put(set, chr)}
         end
       end)
 
-    marker
+    differing_size = MapSet.size(differing_char_set)
+
+    if differing_size == required_size do
+      index + required_size
+    else
+      [_ | rest_chrs] = buffer_chrs
+      first_marker_position_from(rest_chrs, index + 1, required_size)
+    end
   end
 
   def solve_part_one(buffer) do
-    first_marker_of_four_differings(buffer)
+    first_marker_position(buffer, :packet_start)
   end
 
   def solve_part_two(buffer) do
+    first_marker_position(buffer, :message)
   end
 end
