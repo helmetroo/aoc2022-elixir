@@ -27,3 +27,6 @@ aoc2022_elixir-*.tar
 
 # App build
 aoc2022_elixir
+
+# Input files need to be supplied yourself
+input-files/
